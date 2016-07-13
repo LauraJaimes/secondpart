@@ -1,0 +1,157 @@
+---
+title: "ggplot2"
+author: "Lau"
+date: "July 13, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Plan
+
+We'll load libraries and learn ggplot2.
+
+
+summary(cars)
+```{r}
+# Here we write R
+
+#hasstags mean comment.
+
+summary(cars)
+
+```
+
+## Load libraries 
+
+```{r}
+# loading my libraries
+
+library(dplyr)
+library(gapminder)
+library(ggplot2)
+
+## subset our data
+g<-gapminder%>%
+  filter(year==2007)%>%
+  mutate(pop/1e6)
+
+
+```
+
+# My first plot
+
+
+```{r}
+##ggplot (data, aes(what's x, what's y))+what_kind_of_p
+
+s<-ggplot(g, aes(x=gdpPercap, y= lifeExp))+ geom_point()
+
+```
+
+# My second plot
+
+```{r}
+# add aesthetic of size by population
+s<-ggplot(g, aes(x=gdpPercap, y= lifeExp))+ geom_point()
+s
+s2 = s + 
+  aes(size = pop)
+s2
+
+# add aesthetic of color by continent
+
+s3=s2+aes(color = continent)
+
+s3
+```
+
+# Adding titles
+
+```{r}
+# add title, update axes labels
+s4 = s3 + 
+  ggtitle('Health & Wealth of Nations for 2007') +
+  xlab('GDP per capita (USD/year)') +
+  ylab('Life expectancy (years)')
+s4
+# add title, update axes labels
+s5 = s4 + 
+  ggtitle('Health & Wealth of Nations for 2007') +
+  xlab('GDP per capita ($/year)') +
+  ylab('Life expectancy (years)')
+s5
+
+```
+
+#Legend
+
+```{r}
+# label legend
+s6 = s5 + 
+  scale_colour_discrete(name='Continent') +
+  scale_size_continuous(name='Population (M)')
+s6
+
+```
+
+# Boxplot
+
+```{r}
+# boxplot by continent
+b = ggplot(g, aes(x=continent, y=lifeExp)) +
+  geom_boxplot()
+b
+
+```
+
+# coloring the boxplot by continent
+
+```{r}
+# match color to continents, like scatterplot
+b = b +
+  aes(fill=continent)
+b
+```
+
+```{r}
+# drop legend, add title, update axes labels
+b = b +
+  theme(legend.position='none') +
+  ggtitle('Life Expectancy by Continent for 2007') +
+  xlab('Continent') +
+  ylab('Life expectancy (years)')
+b
+
+```
+
+##GoogleVis interactive figure
+
+```{r}
+suppressPackageStartupMessages({
+  library(googleVis) # install.packages('googleVis')
+})
+```
+
+## Creating a generic function for 'toJSON' from package 'jsonlite' in package 'googleVis'
+
+```{r}
+op <- options(gvis.plot.tag='chart')
+
+m = gvisMotionChart(
+  gapminder %>%
+    mutate(
+      pop_m = pop / 1e6,
+      log_gdpPercap = log(gdpPercap)), 
+  idvar='country', 
+  timevar='year', 
+  xvar='log_gdpPercap', 
+  yvar='lifeExp', 
+  colorvar='continent',
+  sizevar='pop_m')
+plot(m)
+
+```
+
