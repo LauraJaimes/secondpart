@@ -1,5 +1,7 @@
 # my-repo
 
+[Here is my ggplt intro](https://laurajaimes.github.io/secondpart/ggplot.html)
+
 Playing with [Software Carpentry at Oxford](http://jule32.github.io/2016-07-12-Oxford).
 
 ## Introduction
